@@ -1,0 +1,11 @@
+# Streamlit secrets (contains API keys)
+.streamlit/secrets.toml
+.streamlit/secrets*
+
+# Virtual environment & python cache
+venv/
+__pycache__/
+*.pyc
+
+# Local SQLite databases (optional, if you don't want to upload test data)
+*.db
