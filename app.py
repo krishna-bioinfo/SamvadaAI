@@ -1,7 +1,13 @@
-# app.py
 import streamlit as st
 from theme import apply_custom_theme
-from db import init_db, authenticate_patient, register_patient, authenticate_doctor
+from db import (
+    init_db,
+    register_patient,
+    authenticate_patient,
+    authenticate_doctor,
+    get_all_intakes_for_doctor,
+    get_patient_history
+)
 from views.patient_view import render_patient_view
 from views.doctor_view import render_doctor_view
 
@@ -11,6 +17,38 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# Custom Styling Rules
+st.markdown("""
+    <style>
+    /* 1. Force dark text inside SOCRATES / Detailed Notes text area */
+    .stTextArea textarea, 
+    .stTextArea textarea:disabled,
+    textarea[aria-label="Detailed Notes:"] {
+        color: #0F172A !important;
+        -webkit-text-fill-color: #0F172A !important;
+        background-color: #F8FAFC !important;
+        font-weight: 600 !important;
+        opacity: 1 !important;
+    }
+
+    /* 2. Style the AYUSH & Integrative Assessment Box properly */
+    .alert-card-green {
+        background-color: #E8F5E9 !important;
+        border-left: 5px solid #2E7D32 !important;
+        padding: 16px !important;
+        border-radius: 8px !important;
+        color: #1B5E20 !important;
+        font-size: 15px !important;
+        font-weight: 500 !important;
+        margin-top: 8px !important;
+    }
+    
+    .alert-card-green p, .alert-card-green div {
+        color: #1B5E20 !important;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
 apply_custom_theme()
 init_db()
@@ -57,7 +95,7 @@ if st.session_state.current_user_role is None:
     
     col_l, col_c, col_r = st.columns([1, 2, 1])
     with col_c:
-        # Pill Toggle Switcher (Inspired by Mentee/Mentor toggle)
+        # Pill Toggle Switcher
         selected_role = st.segmented_control(
             "Select Portal Access",
             options=["🧑 Patient Access", "👨‍⚕️ Doctor / Clinical EMR"],
@@ -109,14 +147,15 @@ if st.session_state.current_user_role is None:
                         if not name or not phone or not pwd:
                             st.error("Please fill in all required fields.")
                         else:
-                            new_user = create_patient(phone, pwd, name, age, sex, height, weight)
-                            if new_user:
-                                st.session_state.patient_user = new_user
+                            success, result = register_patient(phone, pwd, name, age, sex, height, weight)
+                            if success:
+                                user = authenticate_patient(phone, pwd)
+                                st.session_state.patient_user = user
                                 st.session_state.current_user_role = "patient"
                                 st.success("Registration successful!")
                                 st.rerun()
                             else:
-                                st.error("Phone number is already registered.")
+                                st.error(result)
 
         # ---------------- DOCTOR AUTHENTICATION ----------------
         else:
@@ -155,4 +194,4 @@ elif st.session_state.current_user_role == "doctor":
     if st.sidebar.button("🚪 Logout Doctor", use_container_width=True):
         logout_user()
 
-    render_doctor_view()
+    render_doctor_view() 
