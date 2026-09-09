@@ -6,7 +6,7 @@ and the core intake system prompt.
 
 # Valid Gemini API model identifiers
 PRIMARY_MODEL = "gemini-3.6-flash"
-FALLBACK_MODELS = []
+FALLBACK_MODELS = ["gemini-3.5-flash"]
 # Keywords that trigger immediate emergency override
 RED_FLAGS = [
     "chest pain",

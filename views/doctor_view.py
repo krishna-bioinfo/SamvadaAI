@@ -1,4 +1,3 @@
-# views/doctor_view.py
 import sys
 import os
 import streamlit as st
@@ -86,16 +85,33 @@ def render_doctor_view():
         col_left, col_right = st.columns(2)
         with col_left:
             st.subheader("📋 SOCRATES Framework Analysis")
+            
+            # --- FIX 1: CSS Injection to ensure disabled text area text is dark slate & visible ---
+            st.markdown("""
+            <style>
+            textarea[aria-label="Detailed Notes:"] {
+                color: #1E293B !important;
+                -webkit-text-fill-color: #1E293B !important;
+                background-color: #F8FAFC !important;
+                font-weight: 500 !important;
+            }
+            </style>
+            """, unsafe_allow_html=True)
+            
             st.text_area("Detailed Notes:", value=record['socrates_notes'] or "No detailed notes.", height=200, disabled=True)
 
         with col_right:
             st.subheader("🌿 AYUSH & Integrative Assessment")
-            st.markdown("""
-            <div class="alert-card-green">
+            
+            # --- FIX 2: Correctly embedding text INSIDE the styled container ---
+            ayush_text = record["suggested_ayush_focus"] or "Standard evaluation recommended."
+            st.markdown(f"""
+            <div class="alert-card-green" style="background-color: #E8F5E9; border-left: 5px solid #2E7D32; padding: 15px; border-radius: 8px; color: #1B5E20; font-size: 15px;">
+                {ayush_text}
+            </div>
             """, unsafe_allow_html=True)
-            st.write(record["suggested_ayush_focus"] or "Standard evaluation recommended.")
-            st.markdown("</div>", unsafe_allow_html=True)
 
+        st.write("") # spacing spacing
         with st.expander("📜 View Raw Patient-AI Conversation Transcript"):
             if record["chat_transcript"]:
                 for msg in record["chat_transcript"]:
@@ -138,7 +154,7 @@ def render_doctor_view():
 
         opd_slip_text = f"""
 ===================================================================
-                  AYUSH INTEGRATIVE OPD CLINIC
+                  samvadaAI INTEGRATIVE OPD CLINIC
                       CLINICAL PRESCRIPTION SLIP
 ===================================================================
 Date/Time : {record['timestamp']}
@@ -170,7 +186,7 @@ Notes & Treatment Plan:
 {doctor_notes_input if doctor_notes_input else 'No doctor notes entered yet.'}
 
 ===================================================================
-This slip is generated via AyushIntake.AI EMR system for physician review.
+This slip is generated via samvadaAI EMR system for physician review.
 ===================================================================
 """
         with col_act2:

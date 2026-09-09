@@ -1,4 +1,3 @@
-# views/patient_view.py
 import os
 import sys
 
@@ -15,7 +14,7 @@ def render_patient_view():
     h_m = patient["height_cm"] / 100.0
     bmi = round(patient["weight_kg"] / (h_m ** 2), 1) if h_m > 0 else "N/A"
 
-    # Patient Card Header
+    # Patient Card Header (ABHA Verified Badge Removed)
     st.markdown(f"""
     <div class="patient-card">
         <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -25,9 +24,6 @@ def render_patient_view():
                     📱 <b>Phone:</b> {patient['phone_number']} | <b>Age:</b> {patient['age']} | <b>Sex:</b> {patient['sex']} | 
                     <b>Height:</b> {patient['height_cm']} cm | <b>Weight:</b> {patient['weight_kg']} kg | <b>BMI:</b> {bmi}
                 </p>
-            </div>
-            <div>
-                <span class="patient-badge">ABHA Verified</span>
             </div>
         </div>
     </div>

@@ -14,12 +14,9 @@ from config import PRIMARY_MODEL, FALLBACK_MODELS, INTAKE_SYSTEM_PROMPT, RED_FLA
 def get_gemini_clients():
     """Retrieves all available Gemini API clients from secrets for failover."""
     raw_keys = [
-        st.secrets.get("GEMINI_KEY"),
-        st.secrets.get("GEMINI_BACKUP_KEY"),
-        st.secrets.get("GEMINI_KEY_2"),
-        st.secrets.get("GEMINI_KEY_3"),
         st.secrets.get("GEMINI_API_KEY"),
-        st.secrets.get("GEMINI_API_KEY_1")
+        st.secrets.get("GEMINI_BACKUP_KEY"),
+        st.secrets.get("GEMINI_KEY_2")
     ]
     unique_keys = []
     for k in raw_keys:
@@ -27,7 +24,6 @@ def get_gemini_clients():
             unique_keys.append(k)
 
     return [genai.Client(api_key=k) for k in unique_keys]
-
 
 def check_red_flags(text_content: str) -> str | None:
     """Scans text for immediate emergency keywords."""

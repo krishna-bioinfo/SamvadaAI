@@ -6,7 +6,7 @@ from views.patient_view import render_patient_view
 from views.doctor_view import render_doctor_view
 
 st.set_page_config(
-    page_title="AyushIntake.AI — Integrative EMR",
+    page_title="samvadaAI",
     page_icon="🌿",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -28,7 +28,7 @@ st.markdown("""
 <div class="app-header">
     <div style="display: flex; justify-content: space-between; align-items: center;">
         <div>
-            <h1>🌿 AyushIntake.AI</h1>
+            <h1>🌿 samvadaAI</h1>
             <p>Multilingual Voice AI Triage & Integrative OPD Clinical Assistant</p>
         </div>
         <div>
