@@ -83,35 +83,21 @@ def render_doctor_view():
         st.info(record["chief_complaint"] or "Not specified")
 
         col_left, col_right = st.columns(2)
+        
         with col_left:
             st.subheader("📋 SOCRATES Framework Analysis")
-            
-            # --- FIX 1: CSS Injection to ensure disabled text area text is dark slate & visible ---
-            st.markdown("""
-            <style>
-            textarea[aria-label="Detailed Notes:"] {
-                color: #1E293B !important;
-                -webkit-text-fill-color: #1E293B !important;
-                background-color: #F8FAFC !important;
-                font-weight: 500 !important;
-            }
-            </style>
-            """, unsafe_allow_html=True)
-            
-            st.text_area("Detailed Notes:", value=record['socrates_notes'] or "No detailed notes.", height=200, disabled=True)
+            st.text_area("Detailed Notes:", value=record.get('socrates_notes') or "No detailed notes.", height=200, disabled=True)
 
         with col_right:
             st.subheader("🌿 AYUSH & Integrative Assessment")
-            
-            # --- FIX 2: Correctly embedding text INSIDE the styled container ---
-            ayush_text = record["suggested_ayush_focus"] or "Standard evaluation recommended."
+            ayush_text = record.get("suggested_ayush_focus") or "Standard evaluation recommended."
             st.markdown(f"""
-            <div class="alert-card-green" style="background-color: #E8F5E9; border-left: 5px solid #2E7D32; padding: 15px; border-radius: 8px; color: #1B5E20; font-size: 15px;">
-                {ayush_text}
-            </div>
+                <div class="alert-card-green">
+                    {ayush_text}
+                </div>
             """, unsafe_allow_html=True)
 
-        st.write("") # spacing spacing
+        st.write("")
         with st.expander("📜 View Raw Patient-AI Conversation Transcript"):
             if record["chat_transcript"]:
                 for msg in record["chat_transcript"]:
